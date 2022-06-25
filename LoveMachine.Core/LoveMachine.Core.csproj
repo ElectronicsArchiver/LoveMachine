@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation\AnimationAnalyzer.cs" />
+    <Compile Include="Animation\Pattern.cs" />
     <Compile Include="ButtplugController.cs" />
     <Compile Include="Common\Bone.cs" />
     <Compile Include="DepthControl\HotdogDepthPOC.cs" />

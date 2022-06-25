@@ -147,7 +147,8 @@ namespace LoveMachine.Core
                         .Max(),
                     Trough = bonePath
                         .Select(entry => entry.Distance)
-                        .Min()
+                        .Min(),
+                    LinearPattern = new LowResLinearPattern(bonePath.ToList())
                 };
             }
             // Prefer bones that are close and move a lot. Being close is more important.
@@ -161,6 +162,7 @@ namespace LoveMachine.Core
             CoreConfig.Logger.LogInfo($"Calibration for pose {pose} completed. " +
                 $"{samples.Count / femaleBones.Count} frames inspected. " +
                 $"Leading bone: {autoBone}, result: {JsonMapper.ToJson(results[Bone.Auto])}.");
+            CoreConfig.Logger.LogInfo(JsonMapper.ToJson(samples));
         }
 
         private static int GetFrequency(IEnumerable<float> samples)
@@ -185,19 +187,14 @@ namespace LoveMachine.Core
 
         internal void ClearCache() => resultCache.Clear();
 
-        private struct Sample
-        {
-            public Bone Bone { get; set; }
-            public float Time { get; set; }
-            public float Distance { get; set; }
-        }
-
         protected struct WaveInfo
         {
             public float Phase { get; set; }
             public int Frequency { get; set; }
             public float Crest { get; set; }
             public float Trough { get; set; }
+
+            internal LinearPattern LinearPattern { get; set; }
         }
     }
 }

@@ -64,32 +64,34 @@ namespace LoveMachine.Core
         {
             while (true)
             {
-                if (IsIdle(girlIndex))
+                if (IsOrgasming(girlIndex))
+                {
+                    yield return HandleCoroutine(EmulateOrgasmWithStroker(girlIndex, bone));
+                    continue;
+                }
+                if (IsIdle(girlIndex) || !TryGetWaveInfo(girlIndex, bone, out var waveInfo))
                 {
                     yield return new WaitForSeconds(.1f);
                     continue;
                 }
-                if (IsOrgasming(girlIndex))
-                {
-                    yield return HandleCoroutine(EmulateOrgasmWithStroker(girlIndex, bone));
-                }
                 string pose = GetPose(girlIndex);
-                yield return WaitForUpStroke(girlIndex, bone);
+                GetAnimState(girlIndex, out float normTime, out _, out _);
+                var evt = waveInfo.LinearPattern.GetNextEvent(normTime);
+                yield return WaitForEvent(girlIndex, evt);
                 if (GetPose(girlIndex) != pose)
                 {
                     continue;
                 }
                 float strokeTimeSecs = GetStrokeTimeSecs(girlIndex, bone);
-                TryGetWaveInfo(girlIndex, bone, out var waveInfo);
                 float relativeLength = (waveInfo.Crest - waveInfo.Trough) / PenisSize;
                 float scale = Mathf.Lerp(1f - CoreConfig.StrokeLengthRealism.Value, 1f,
                     relativeLength);
-                for (int i = 0; i < waveInfo.Frequency - 1; i++)
-                {
-                    HandleCoroutine(DoStroke(girlIndex, bone, strokeTimeSecs, scale));
-                    yield return new WaitForSecondsRealtime(strokeTimeSecs);
-                }
-                yield return HandleCoroutine(DoStroke(girlIndex, bone, strokeTimeSecs, scale));
+                float realDurationSecs = strokeTimeSecs * (evt.EndTime - evt.StartTime);
+                float realEndPosition = Mathf.InverseLerp(waveInfo.Trough, waveInfo.Crest,
+                    evt.EndPosition);
+                CoreConfig.Logger.LogInfo($"DUR {realDurationSecs} POS {realEndPosition}");
+                MoveStroker(realEndPosition, realDurationSecs, girlIndex, bone);
+                yield return new WaitForSecondsRealtime(realDurationSecs / 2);
             }
         }
 
@@ -152,8 +154,7 @@ namespace LoveMachine.Core
         protected virtual float GetStrokeTimeSecs(int girlIndex, Bone bone)
         {
             GetAnimState(girlIndex, out _, out float length, out float speed);
-            int freq = TryGetWaveInfo(girlIndex, bone, out var result) ? result.Frequency : 1;
-            float strokeTimeSecs = length / speed / freq;
+            float strokeTimeSecs = length / speed;
             // sometimes the length of an animation becomes Infinity in KK
             // sometimes the speed becomes 0 in HS2
             // this is a catch-all for god knows what other things that can
@@ -236,7 +237,7 @@ namespace LoveMachine.Core
             client.RotateCmd(upSpeed, !clockwise, girlIndex, bone);
         }
 
-        protected CustomYieldInstruction WaitForUpStroke(int girlIndex, Bone bone)
+        internal CustomYieldInstruction WaitForEvent(int girlIndex, IDeviceEvent evt)
         {
             float normalizedTime()
             {
@@ -245,12 +246,9 @@ namespace LoveMachine.Core
             }
             string startPose = GetPose(girlIndex);
             float startNormTime = normalizedTime();
-            float strokeTimeSecs = GetStrokeTimeSecs(girlIndex, bone);
-            float latencyNormTime = CoreConfig.LatencyMs.Value / 1000f / strokeTimeSecs;
+            float eventTime = evt.StartTime % 1f - 1f;
             bool timeToStroke() => GetPose(girlIndex) != startPose
-                || (TryGetWaveInfo(girlIndex, bone, out var result)
-                    && (int)(normalizedTime() - result.Phase + latencyNormTime + 10f)
-                        != (int)(startNormTime - result.Phase + latencyNormTime + 10f));
+                || (int)(normalizedTime() - eventTime) != (int)(startNormTime - eventTime);
             return new WaitUntil(timeToStroke);
         }
 
