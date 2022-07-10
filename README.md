@@ -5,6 +5,7 @@
 
 <br>
 <br>
+<br>
 
 <div align = center>
 
@@ -19,7 +20,10 @@
 
 ## Sponsors
 
-**[ManlyMarco]**  |  **AkronusWings**  |  **AstralClock**  |  **Benos Hentai**  |  **Bri**  |  **CBN ヴい**  |  **CROM**  |  **EPTG**  |  **funnychicken**  |  **GOU YOSIHIRO**  |  **Greg**  |  **kai harayama**  |  **kuni**  |  **Nemi**  |  **RP君**  |  **Shakes**  |  **Taibe**  |  **Taka Yami**  |  **tanu**  |  **TrashTaste**  |  **tutinoko**  |  **uruurian**  |  **Wel Adunno**  |  **yamada tarou**  |  **ふ**  |  **猛 羽場**  |  **终晓**  |  **郁弥 中村**
+**[ManlyMarco]**  |  **AkronusWings**  |  **AstralClock**  |  **Benos Hentai**  |  **Bri**  |  **CBN ヴい**  |  **CROM**  |  **EPTG** <br>
+**funnychicken**  |  **GOU YOSIHIRO**  |  **Greg**  |  **kai harayama**  |  **kuni**  |  **Nemi**  |  **RP君**  |  **Shakes**  |  **Taibe** <br>
+**Taka Yami**  |  **tanu**  |  **TrashTaste**  |  **tutinoko**  |  **uruurian**  |  **Wel Adunno**  |  **yamada tarou**  |  **ふ** <br>
+**猛 羽場**  |  **终晓**  |  **郁弥 中村**
 
 <br>
 <br>

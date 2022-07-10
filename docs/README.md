@@ -1,19 +1,13 @@
 
-# LoveMachine   ![Badge Downloads]   [![Badge Japanese]][Japanese]
-
-*Makes sex toys work with your games.*
+*Makes sex toys work with your games.*        ![Badge Downloads]   [![Badge Japanese]][Japanese]
 
 <br>
 <br>
-
-<!-- <div align = center> -->
 
 [![Button Install]][Install]   
 [![Button Use]][Use]   
 [![Button Configure]][Configure]   
 [![Button Patreon]][Patreon] 
-
-<!-- </div> -->
 
 <br>
 
